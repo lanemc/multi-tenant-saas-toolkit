@@ -75,7 +75,7 @@ export function mongooseTenantPlugin(schema: Schema, options: MongooseAdapterOpt
   });
 
   // Pre hook for insertMany
-  schema.pre('insertMany', function(this: Model<any>, next: Function, docs: any[]) {
+  schema.pre('insertMany', function(this: Model<any>, next: () => void, docs: any[]) {
     const tenantId = tenantContext.getCurrentTenantId();
     if (!tenantId) {
       next();

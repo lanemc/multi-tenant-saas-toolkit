@@ -33,5 +33,15 @@ module.exports = {
     'import/no-unresolved': 'off',
     'no-console': ['warn', { allow: ['warn', 'error'] }]
   },
-  ignorePatterns: ['dist', 'node_modules', '*.js']
+  ignorePatterns: ['dist', 'node_modules', '*.js'],
+  overrides: [
+    {
+      files: ['**/*.test.ts', '**/__tests__/**/*.ts', '**/examples/**/*.ts'],
+      rules: {
+        '@typescript-eslint/no-unused-vars': 'warn',
+        'no-console': 'off',
+        '@typescript-eslint/no-explicit-any': 'off'
+      }
+    }
+  ]
 };
