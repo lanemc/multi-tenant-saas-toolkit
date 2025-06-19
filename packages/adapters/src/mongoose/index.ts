@@ -40,7 +40,8 @@ export function mongooseTenantPlugin(schema: Schema, options: MongooseAdapterOpt
   ];
 
   findHooks.forEach(method => {
-    schema.pre(method as any, function(this: Query<any, any>) {
+    // @ts-expect-error - Dynamic method name not in mongoose types
+    schema.pre(method, function(this: Query<Document, Document>) {
       const tenantId = tenantContext.getCurrentTenantId();
       if (!tenantId) return;
 
@@ -53,7 +54,7 @@ export function mongooseTenantPlugin(schema: Schema, options: MongooseAdapterOpt
   });
 
   // Pre hook for aggregate
-  schema.pre('aggregate', function(this: Aggregate<any>) {
+  schema.pre('aggregate', function(this: Aggregate<Document>) {
     const tenantId = tenantContext.getCurrentTenantId();
     if (!tenantId) return;
 
@@ -75,7 +76,7 @@ export function mongooseTenantPlugin(schema: Schema, options: MongooseAdapterOpt
   });
 
   // Pre hook for insertMany
-  schema.pre('insertMany', function(this: Model<any>, next: () => void, docs: any[]) {
+  schema.pre('insertMany', function(this: Model<Document>, next: () => void, docs: Document[]) {
     const tenantId = tenantContext.getCurrentTenantId();
     if (!tenantId) {
       next();
@@ -85,8 +86,8 @@ export function mongooseTenantPlugin(schema: Schema, options: MongooseAdapterOpt
     // Add tenant ID to all documents
     const tenantObjectId = new Types.ObjectId(tenantId);
     docs.forEach(doc => {
-      if (!doc[tenantField]) {
-        doc[tenantField] = tenantObjectId;
+      if (!(doc as unknown as Record<string, unknown>)[tenantField]) {
+        (doc as unknown as Record<string, unknown>)[tenantField] = tenantObjectId;
       }
     });
     
@@ -101,7 +102,8 @@ export function mongooseTenantPlugin(schema: Schema, options: MongooseAdapterOpt
   ];
 
   updateHooks.forEach(method => {
-    schema.pre(method as any, function(this: Query<any, any>) {
+    // @ts-expect-error - Dynamic method name not in mongoose types
+    schema.pre(method, function(this: Query<Document, Document>) {
       const tenantId = tenantContext.getCurrentTenantId();
       if (!tenantId) return;
 
@@ -113,11 +115,11 @@ export function mongooseTenantPlugin(schema: Schema, options: MongooseAdapterOpt
 
       // Add tenant ID to update data for upserts
       const update = this.getUpdate();
-      if (update && (update as any).upsert) {
-        if ((update as any).$setOnInsert) {
-          (update as any).$setOnInsert[tenantField] = new Types.ObjectId(tenantId);
+      if (update && typeof update === 'object' && '$setOnInsert' in update) {
+        if (update.$setOnInsert) {
+          (update.$setOnInsert as Record<string, unknown>)[tenantField] = new Types.ObjectId(tenantId);
         } else {
-          (update as any).$setOnInsert = {
+          update.$setOnInsert = {
             [tenantField]: new Types.ObjectId(tenantId)
           };
         }
@@ -129,7 +131,8 @@ export function mongooseTenantPlugin(schema: Schema, options: MongooseAdapterOpt
   const deleteHooks = ['deleteOne', 'deleteMany'];
 
   deleteHooks.forEach(method => {
-    schema.pre(method as any, function(this: Query<any, any>) {
+    // @ts-expect-error - Dynamic method name not in mongoose types
+    schema.pre(method, function(this: Query<Document, Document>) {
       const tenantId = tenantContext.getCurrentTenantId();
       if (!tenantId) return;
 
@@ -200,9 +203,9 @@ export async function withTenantContext<T>(
  * Create a Mongoose connection with tenant plugin applied to all schemas
  */
 export function createTenantConnection(
-  mongoose: any,
+  mongoose: typeof import('mongoose'),
   uri: string,
-  options: any = {},
+  options: Record<string, unknown> = {},
   pluginOptions?: MongooseAdapterOptions
 ) {
   const connection = mongoose.createConnection(uri, options);
