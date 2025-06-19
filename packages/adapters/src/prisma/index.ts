@@ -122,14 +122,14 @@ export function applyPrismaAdapter(prisma: any, options?: PrismaAdapterOptions) 
 /**
  * Create a tenant-scoped Prisma client factory
  */
-export function createTenantPrismaClient<T>(
-  PrismaClient: new (options?: any) => T,
+export function createTenantPrismaClient(
+  PrismaClient: new (options?: any) => any,
   options?: PrismaAdapterOptions
-): new (clientOptions?: any) => T {
+): new (clientOptions?: any) => any {
   return class TenantPrismaClient extends PrismaClient {
     constructor(clientOptions?: any) {
       super(clientOptions);
       applyPrismaAdapter(this, options);
     }
-  } as any;
+  };
 }

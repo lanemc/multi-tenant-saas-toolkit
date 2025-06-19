@@ -180,7 +180,7 @@ export function createTenantModel<T extends Document>(
   }
 
   // Create new discriminator
-  return baseModel.discriminator(value, new Schema({}));
+  return baseModel.discriminator(value, new Schema({})) as Model<T>;
 }
 
 /**
