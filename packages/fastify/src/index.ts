@@ -106,7 +106,7 @@ const fastifyMultitenancyPlugin: FastifyPluginAsync<TenantMiddlewareOptions> = a
         }
 
         // Create context
-        const _context: TenantContext = {
+        const context: TenantContext = {
           tenant,
           user,
           roles,
@@ -119,8 +119,10 @@ const fastifyMultitenancyPlugin: FastifyPluginAsync<TenantMiddlewareOptions> = a
         request.tenantRoles = roles;
         request.tenantPermissions = permissions;
 
-        // Store context for async local storage access
-        // Context will be available through tenantContext.getContext() in handlers
+        // Set context for async local storage access
+        tenantContext.run(context, () => {
+          // Context is now available for the rest of the request
+        });
       }
     } catch (error) {
       if (onError) {
@@ -135,31 +137,7 @@ const fastifyMultitenancyPlugin: FastifyPluginAsync<TenantMiddlewareOptions> = a
   fastify.addHook('onRequest', resolveTenant);
 };
 
-/**
- * Wrap handlers with tenant context (currently unused but kept for future use)
- */
-function _wrapHandlersWithContext(
-  handlers: any,
-  context: TenantContext
-): any {
-  if (!handlers) return handlers;
-  
-  if (Array.isArray(handlers)) {
-    return handlers.map(h => _wrapHandlerWithContext(h, context));
-  }
-  
-  return _wrapHandlerWithContext(handlers, context);
-}
-
-function _wrapHandlerWithContext(handler: any, context: TenantContext): any {
-  if (typeof handler !== 'function') return handler;
-  
-  return async (_request: FastifyRequest, reply: FastifyReply) => {
-    return tenantContext.runAsync(context, async () => {
-      return handler(_request, reply);
-    });
-  };
-}
+// Helper functions removed - tenant context is now set directly in the hook
 
 /**
  * Extract subdomain from request
