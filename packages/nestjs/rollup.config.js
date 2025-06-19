@@ -1,7 +1,7 @@
-import resolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
-import typescript from '@rollup/plugin-typescript';
-import dts from 'rollup-plugin-dts';
+const resolve = require('@rollup/plugin-node-resolve');
+const commonjs = require('@rollup/plugin-commonjs');
+const typescript = require('@rollup/plugin-typescript');
+const dts = require('rollup-plugin-dts').default;
 
 const external = [
   '@saaskit/multitenancy-core',
@@ -11,7 +11,7 @@ const external = [
   'rxjs'
 ];
 
-export default [
+module.exports = [
   // ES Modules and CommonJS build
   {
     input: 'src/index.ts',
