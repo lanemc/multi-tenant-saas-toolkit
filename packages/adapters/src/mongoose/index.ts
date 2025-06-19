@@ -1,5 +1,5 @@
 import { tenantContext } from '@saaskit/multitenancy-core';
-import type { Schema, Model, Document, Query, Aggregate, Types } from 'mongoose';
+import { Schema, Model, Document, Query, Aggregate, Types } from 'mongoose';
 
 export interface MongooseAdapterOptions {
   tenantField?: string;
@@ -187,7 +187,7 @@ export function createTenantModel<T extends Document>(
  * Helper to run a function with a specific tenant context
  */
 export async function withTenantContext<T>(
-  tenantId: string,
+  _tenantId: string,
   fn: () => Promise<T>
 ): Promise<T> {
   // This would typically integrate with the core context manager

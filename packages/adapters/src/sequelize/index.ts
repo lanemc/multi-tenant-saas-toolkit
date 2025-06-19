@@ -1,5 +1,5 @@
 import { tenantContext } from '@saaskit/multitenancy-core';
-import type { Model, ModelStatic, FindOptions, CreateOptions, UpdateOptions, DestroyOptions } from 'sequelize';
+import { Model, ModelStatic, FindOptions, CreateOptions, UpdateOptions, DestroyOptions } from 'sequelize';
 
 export interface SequelizeAdapterOptions {
   tenantField?: string;
@@ -59,7 +59,7 @@ export function applySequelizeAdapter(
   });
 
   // Add tenant filter to update operations
-  model.addHook('beforeUpdate', (instance: Model, options: UpdateOptions) => {
+  model.addHook('beforeUpdate', (_instance: Model, options: UpdateOptions) => {
     const tenantId = tenantContext.getCurrentTenantId();
     if (!tenantId) return;
 
@@ -77,7 +77,7 @@ export function applySequelizeAdapter(
   });
 
   // Add tenant filter to destroy operations
-  model.addHook('beforeDestroy', (instance: Model, options: DestroyOptions) => {
+  model.addHook('beforeDestroy', (_instance: Model, options: DestroyOptions) => {
     const tenantId = tenantContext.getCurrentTenantId();
     if (!tenantId) return;
 

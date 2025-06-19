@@ -8,10 +8,12 @@
     "examples/*"
   ],
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
+    "build": "npm run build:core && npm run build:rest",
+    "build:core": "npm run build --workspace=packages/core",
+    "build:rest": "npm run build --workspace=packages/auth --workspace=packages/adapters --workspace=packages/nestjs --workspace=packages/fastify --if-present",
     "test": "npm run test --workspaces --if-present",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
-    "typecheck": "npm run typecheck --workspaces --if-present",
+    "typecheck": "npm run build:core && npm run typecheck --workspaces --if-present",
     "clean": "npm run clean --workspaces --if-present && rimraf node_modules",
     "prepare": "husky install"
   },

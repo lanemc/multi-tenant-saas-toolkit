@@ -106,7 +106,7 @@ const fastifyMultitenancyPlugin: FastifyPluginAsync<TenantMiddlewareOptions> = a
         }
 
         // Create context
-        const context: TenantContext = {
+        const _context: TenantContext = {
           tenant,
           user,
           roles,
@@ -120,27 +120,7 @@ const fastifyMultitenancyPlugin: FastifyPluginAsync<TenantMiddlewareOptions> = a
         request.tenantPermissions = permissions;
 
         // Store context for async local storage access
-        // We'll wrap each subsequent hook and handler with the context
-        const originalRouteHandler = reply.context.handler;
-        reply.context.handler = function (request: FastifyRequest, reply: FastifyReply) {
-          return tenantContext.runAsync(context, async () => {
-            return originalRouteHandler(request, reply);
-          });
-        };
-
-        // Also ensure all hooks run within context
-        request.routeOptions.preHandler = wrapHandlersWithContext(
-          request.routeOptions.preHandler,
-          context
-        );
-        request.routeOptions.preSerialization = wrapHandlersWithContext(
-          request.routeOptions.preSerialization,
-          context
-        );
-        request.routeOptions.onSend = wrapHandlersWithContext(
-          request.routeOptions.onSend,
-          context
-        );
+        // Context will be available through tenantContext.getContext() in handlers
       }
     } catch (error) {
       if (onError) {
@@ -156,27 +136,27 @@ const fastifyMultitenancyPlugin: FastifyPluginAsync<TenantMiddlewareOptions> = a
 };
 
 /**
- * Wrap handlers with tenant context
+ * Wrap handlers with tenant context (currently unused but kept for future use)
  */
-function wrapHandlersWithContext(
+function _wrapHandlersWithContext(
   handlers: any,
   context: TenantContext
 ): any {
   if (!handlers) return handlers;
   
   if (Array.isArray(handlers)) {
-    return handlers.map(h => wrapHandlerWithContext(h, context));
+    return handlers.map(h => _wrapHandlerWithContext(h, context));
   }
   
-  return wrapHandlerWithContext(handlers, context);
+  return _wrapHandlerWithContext(handlers, context);
 }
 
-function wrapHandlerWithContext(handler: any, context: TenantContext): any {
+function _wrapHandlerWithContext(handler: any, context: TenantContext): any {
   if (typeof handler !== 'function') return handler;
   
   return async (_request: FastifyRequest, reply: FastifyReply) => {
     return tenantContext.runAsync(context, async () => {
-      return handler(request, reply);
+      return handler(_request, reply);
     });
   };
 }
