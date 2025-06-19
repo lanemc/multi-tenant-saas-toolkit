@@ -1,5 +1,5 @@
-import { Injectable, NestMiddleware, Inject } from '@nestjs/common';
 import { TenantContext, tenantContext } from '@lanemc/multitenancy-core';
+import { Injectable, NestMiddleware, Inject } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 
 import { MULTITENANCY_OPTIONS } from '../constants';

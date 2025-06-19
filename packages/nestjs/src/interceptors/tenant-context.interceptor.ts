@@ -1,5 +1,5 @@
-import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
 import { tenantContext } from '@lanemc/multitenancy-core';
+import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
 import { Observable } from 'rxjs';
 
 import { TenantRequest } from '../middleware/tenant.middleware';

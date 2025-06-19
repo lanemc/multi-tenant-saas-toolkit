@@ -1,5 +1,5 @@
-import { ModuleMetadata, Type } from '@nestjs/common';
 import { TenantMiddlewareOptions } from '@lanemc/multitenancy-core';
+import { ModuleMetadata, Type } from '@nestjs/common';
 
 export interface MultitenancyModuleOptions extends TenantMiddlewareOptions {
   global?: boolean;

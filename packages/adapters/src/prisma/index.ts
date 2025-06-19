@@ -6,6 +6,27 @@ export interface PrismaAdapterOptions {
   excludeModels?: string[];
 }
 
+export interface PrismaMiddlewareParams {
+  model?: string;
+  action: string;
+  args: Record<string, unknown>;
+  dataPath: string[];
+  runInTransaction: boolean;
+}
+
+export interface PrismaClient {
+  $use: (middleware: PrismaMiddleware) => void;
+}
+
+export type PrismaMiddleware = (
+  params: PrismaMiddlewareParams,
+  next: (params: PrismaMiddlewareParams) => Promise<unknown>
+) => Promise<unknown>;
+
+export interface PrismaConstructor {
+  new (options?: Record<string, unknown>): PrismaClient;
+}
+
 /**
  * Create a Prisma middleware for automatic tenant filtering
  */
@@ -16,7 +37,7 @@ export function createPrismaAdapter(options: PrismaAdapterOptions = {}) {
     excludeModels = []
   } = options;
 
-  return async (params: any, next: (params: any) => Promise<any>) => {
+  return async (params: PrismaMiddlewareParams, next: (params: PrismaMiddlewareParams) => Promise<unknown>) => {
     const tenantId = tenantContext.getCurrentTenantId();
 
     // Skip if no tenant context
@@ -66,7 +87,7 @@ export function createPrismaAdapter(options: PrismaAdapterOptions = {}) {
     if (params.action === 'createMany') {
       params.args = params.args || {};
       if (Array.isArray(params.args.data)) {
-        params.args.data = params.args.data.map((item: any) => ({
+        params.args.data = (params.args.data as Record<string, unknown>[]).map((item: Record<string, unknown>) => ({
           ...item,
           [tenantField]: tenantId
         }));
@@ -113,7 +134,7 @@ export function createPrismaAdapter(options: PrismaAdapterOptions = {}) {
 /**
  * Apply the Prisma adapter to a Prisma client instance
  */
-export function applyPrismaAdapter(prisma: any, options?: PrismaAdapterOptions) {
+export function applyPrismaAdapter(prisma: PrismaClient, options?: PrismaAdapterOptions) {
   const middleware = createPrismaAdapter(options);
   prisma.$use(middleware);
   return prisma;
@@ -123,11 +144,11 @@ export function applyPrismaAdapter(prisma: any, options?: PrismaAdapterOptions) 
  * Create a tenant-scoped Prisma client factory
  */
 export function createTenantPrismaClient(
-  PrismaClient: new (options?: any) => any,
+  PrismaClient: PrismaConstructor,
   options?: PrismaAdapterOptions
-): new (clientOptions?: any) => any {
+): PrismaConstructor {
   return class TenantPrismaClient extends PrismaClient {
-    constructor(clientOptions?: any) {
+    constructor(clientOptions?: Record<string, unknown>) {
       super(clientOptions);
       applyPrismaAdapter(this, options);
     }

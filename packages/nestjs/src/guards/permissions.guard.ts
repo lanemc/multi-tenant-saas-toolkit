@@ -1,6 +1,6 @@
+import { tenantContext } from '@lanemc/multitenancy-core';
 import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { tenantContext } from '@lanemc/multitenancy-core';
 
 import { PERMISSIONS_KEY } from '../constants';
 
