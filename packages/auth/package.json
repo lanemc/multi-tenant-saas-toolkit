@@ -1,0 +1,36 @@
+{
+  "name": "@saaskit/multitenancy-auth",
+  "version": "1.0.0",
+  "description": "RBAC and ABAC authorization for multi-tenant applications",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "test": "jest",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@saaskit/multitenancy-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.10",
+    "@types/node": "^20.10.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.1",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
