@@ -1,5 +1,5 @@
-import { tenantContext } from '@thesaasdevkit/multitenancy-core';
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
+import { tenantContext } from '@thesaasdevkit/multitenancy-core';
 import { Observable } from 'rxjs';
 
 import { TenantRequest } from '../middleware/tenant.middleware';
