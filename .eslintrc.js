@@ -30,6 +30,7 @@ module.exports = {
         alphabetize: { order: 'asc' }
       }
     ],
+    'import/no-unresolved': 'off',
     'no-console': ['warn', { allow: ['warn', 'error'] }]
   },
   ignorePatterns: ['dist', 'node_modules', '*.js']

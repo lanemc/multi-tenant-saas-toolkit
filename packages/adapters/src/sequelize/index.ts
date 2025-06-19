@@ -38,7 +38,7 @@ export function applySequelizeAdapter(
   });
 
   // Add tenant ID to create operations
-  model.addHook('beforeCreate', (instance: Model, options: CreateOptions) => {
+  model.addHook('beforeCreate', (instance: Model, _options: CreateOptions) => {
     const tenantId = tenantContext.getCurrentTenantId();
     if (!tenantId) return;
 
