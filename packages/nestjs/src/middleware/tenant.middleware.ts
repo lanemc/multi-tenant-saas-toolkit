@@ -1,4 +1,4 @@
-import { TenantContext, tenantContext } from '@lanemc/multitenancy-core';
+import { TenantContext, tenantContext } from '@thesaasdevkit/multitenancy-core';
 import { Injectable, NestMiddleware, Inject } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 

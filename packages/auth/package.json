@@ -1,5 +1,5 @@
 {
-  "name": "@lanemc/multitenancy-auth",
+  "name": "@thesaasdevkit/multitenancy-auth",
   "version": "1.0.1",
   "description": "RBAC and ABAC authorization for multi-tenant applications",
   "main": "dist/index.js",
@@ -17,7 +17,7 @@
     "clean": "rimraf dist"
   },
   "dependencies": {
-    "@lanemc/multitenancy-core": "^1.0.1"
+    "@thesaasdevkit/multitenancy-core": "^1.0.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.10",

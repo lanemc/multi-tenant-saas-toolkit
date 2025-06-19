@@ -1,4 +1,4 @@
-import { tenantContext } from '@lanemc/multitenancy-core';
+import { tenantContext } from '@thesaasdevkit/multitenancy-core';
 
 export interface PrismaAdapterOptions {
   tenantField?: string;
@@ -52,7 +52,7 @@ export function createPrismaAdapter(options: PrismaAdapterOptions = {}) {
       return true; // Filter all models by default
     };
 
-    if (!shouldFilter(params.model)) {
+    if (!params.model || !shouldFilter(params.model)) {
       return next(params);
     }
 
@@ -62,17 +62,18 @@ export function createPrismaAdapter(options: PrismaAdapterOptions = {}) {
       params.args.where = params.args.where || {};
       
       // Add tenant filter
-      if (params.args.where.AND) {
-        params.args.where.AND.push({ [tenantField]: tenantId });
-      } else if (params.args.where.OR) {
+      const whereClause = params.args.where as Record<string, unknown>;
+      if (whereClause.AND) {
+        (whereClause.AND as Record<string, unknown>[]).push({ [tenantField]: tenantId });
+      } else if (whereClause.OR) {
         params.args.where = {
           AND: [
             { [tenantField]: tenantId },
-            { OR: params.args.where.OR }
+            { OR: whereClause.OR }
           ]
         };
       } else {
-        params.args.where[tenantField] = tenantId;
+        whereClause[tenantField] = tenantId;
       }
     }
 
@@ -80,7 +81,7 @@ export function createPrismaAdapter(options: PrismaAdapterOptions = {}) {
     if (params.action === 'create') {
       params.args = params.args || {};
       params.args.data = params.args.data || {};
-      params.args.data[tenantField] = tenantId;
+      (params.args.data as Record<string, unknown>)[tenantField] = tenantId;
     }
 
     // Add tenant ID to createMany operations
@@ -92,7 +93,7 @@ export function createPrismaAdapter(options: PrismaAdapterOptions = {}) {
           [tenantField]: tenantId
         }));
       } else if (params.args.data) {
-        params.args.data[tenantField] = tenantId;
+        (params.args.data as Record<string, unknown>)[tenantField] = tenantId;
       }
     }
 
@@ -101,12 +102,13 @@ export function createPrismaAdapter(options: PrismaAdapterOptions = {}) {
       params.args = params.args || {};
       params.args.where = params.args.where || {};
       
-      if (params.args.where.AND) {
-        params.args.where.AND.push({ [tenantField]: tenantId });
+      const whereClause = params.args.where as Record<string, unknown>;
+      if (whereClause.AND) {
+        (whereClause.AND as Record<string, unknown>[]).push({ [tenantField]: tenantId });
       } else {
         params.args.where = {
           AND: [
-            params.args.where,
+            whereClause,
             { [tenantField]: tenantId }
           ]
         };
@@ -121,10 +123,10 @@ export function createPrismaAdapter(options: PrismaAdapterOptions = {}) {
       params.args.update = params.args.update || {};
       
       // Add to where clause
-      params.args.where[tenantField] = tenantId;
+      (params.args.where as Record<string, unknown>)[tenantField] = tenantId;
       
       // Add to create data
-      params.args.create[tenantField] = tenantId;
+      (params.args.create as Record<string, unknown>)[tenantField] = tenantId;
     }
 
     return next(params);

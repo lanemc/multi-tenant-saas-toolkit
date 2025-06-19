@@ -1,4 +1,4 @@
-import { TenantContext } from '@lanemc/multitenancy-core';
+import { TenantContext } from '@thesaasdevkit/multitenancy-core';
 
 export type PolicyEffect = 'allow' | 'deny';
 

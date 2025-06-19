@@ -1,4 +1,4 @@
-import { tenantContext, TenantContext } from '@lanemc/multitenancy-core';
+import { tenantContext, TenantContext } from '@thesaasdevkit/multitenancy-core';
 
 import { PolicyEngine, Policy } from './abac/policy-engine';
 import { RoleManager } from './rbac/role-manager';

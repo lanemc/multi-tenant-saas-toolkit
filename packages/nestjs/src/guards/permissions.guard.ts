@@ -1,4 +1,4 @@
-import { tenantContext } from '@lanemc/multitenancy-core';
+import { tenantContext } from '@thesaasdevkit/multitenancy-core';
 import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 

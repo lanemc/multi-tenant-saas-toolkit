@@ -1,4 +1,4 @@
-import { RoleDefinition } from '@lanemc/multitenancy-core';
+import { RoleDefinition } from '@thesaasdevkit/multitenancy-core';
 
 export interface RoleManagerOptions {
   roles?: RoleDefinition[];

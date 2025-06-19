@@ -1,5 +1,5 @@
-import { tenantContext } from '@lanemc/multitenancy-core';
-import { Model, ModelStatic, FindOptions, CreateOptions, UpdateOptions, DestroyOptions } from 'sequelize';
+import { tenantContext } from '@thesaasdevkit/multitenancy-core';
+import { Model, ModelStatic, FindOptions, CreateOptions, UpdateOptions, DestroyOptions, Sequelize, ModelAttributes, ModelOptions, BulkCreateOptions, Attributes, WhereOptions } from 'sequelize';
 
 export interface SequelizeAdapterOptions {
   tenantField?: string;
@@ -10,8 +10,8 @@ export interface SequelizeAdapterOptions {
 /**
  * Apply tenant scoping to a Sequelize model
  */
-export function applySequelizeAdapter(
-  model: ModelStatic<any>,
+export function applySequelizeAdapter<T extends Model>(
+  model: ModelStatic<T>,
   options: SequelizeAdapterOptions = {}
 ): void {
   const { tenantField = 'tenantId' } = options;
@@ -24,7 +24,8 @@ export function applySequelizeAdapter(
     options.where = options.where || {};
     
     // Handle complex where conditions
-    if ((options.where as any)[Symbol.for('or')] || (options.where as any)[Symbol.for('and')]) {
+    const whereOptions = options.where as Record<string | symbol, unknown>;
+    if (whereOptions[Symbol.for('or')] || whereOptions[Symbol.for('and')]) {
       // Wrap existing conditions with tenant filter
       options.where = {
         [Symbol.for('and')]: [
@@ -33,7 +34,7 @@ export function applySequelizeAdapter(
         ]
       };
     } else {
-      (options.where as any)[tenantField] = tenantId;
+      (options.where as Record<string, unknown>)[tenantField] = tenantId;
     }
   });
 
@@ -46,15 +47,14 @@ export function applySequelizeAdapter(
   });
 
   // Add tenant ID to bulk create operations
-  model.addHook('beforeBulkCreate', (options: any) => {
+  model.addHook('beforeBulkCreate', (instances: T[], _options: BulkCreateOptions<Attributes<T>>) => {
     const tenantId = tenantContext.getCurrentTenantId();
     if (!tenantId) return;
 
-    if (Array.isArray(options.records)) {
-      options.records = options.records.map((record: any) => ({
-        ...record,
-        [tenantField]: tenantId
-      }));
+    if (Array.isArray(instances)) {
+      instances.forEach((instance: T) => {
+        instance.setDataValue(tenantField as keyof Attributes<T>, tenantId);
+      });
     }
   });
 
@@ -64,7 +64,7 @@ export function applySequelizeAdapter(
     if (!tenantId) return;
 
     options.where = options.where || {};
-    (options.where as any)[tenantField] = tenantId;
+    (options.where as Record<string, unknown>)[tenantField] = tenantId;
   });
 
   // Add tenant filter to bulk update operations
@@ -73,7 +73,7 @@ export function applySequelizeAdapter(
     if (!tenantId) return;
 
     options.where = options.where || {};
-    (options.where as any)[tenantField] = tenantId;
+    (options.where as Record<string, unknown>)[tenantField] = tenantId;
   });
 
   // Add tenant filter to destroy operations
@@ -82,7 +82,7 @@ export function applySequelizeAdapter(
     if (!tenantId) return;
 
     options.where = options.where || {};
-    (options.where as any)[tenantField] = tenantId;
+    (options.where as Record<string, unknown>)[tenantField] = tenantId;
   });
 
   // Add tenant filter to bulk destroy operations
@@ -91,7 +91,7 @@ export function applySequelizeAdapter(
     if (!tenantId) return;
 
     options.where = options.where || {};
-    (options.where as any)[tenantField] = tenantId;
+    (options.where as Record<string, unknown>)[tenantField] = tenantId;
   });
 
   // Add a default scope for tenant filtering
@@ -104,7 +104,7 @@ export function applySequelizeAdapter(
     return {
       where: {
         [tenantField]: contextTenantId
-      }
+      } as WhereOptions<Attributes<T>>
     };
   });
 }
@@ -115,12 +115,12 @@ export function applySequelizeAdapter(
 export function createSequelizePlugin(options: SequelizeAdapterOptions = {}) {
   const { models = [], excludeModels = [] } = options;
 
-  return (sequelize: any) => {
+  return (sequelize: Sequelize) => {
     // Apply to all models after they are defined
     const originalDefine = sequelize.define.bind(sequelize);
     
-    sequelize.define = function(modelName: string, attributes: any, modelOptions: any = {}) {
-      const model = originalDefine(modelName, attributes, modelOptions);
+    sequelize.define = function<M extends Model>(modelName: string, attributes: ModelAttributes<M>, modelOptions: ModelOptions<M> = {}) {
+      const model = originalDefine(modelName, attributes, modelOptions) as ModelStatic<M>;
       
       // Check if this model should have tenant filtering
       const shouldApply = excludeModels.includes(modelName) 
@@ -128,21 +128,21 @@ export function createSequelizePlugin(options: SequelizeAdapterOptions = {}) {
         : models.length === 0 || models.includes(modelName);
       
       if (shouldApply) {
-        applySequelizeAdapter(model, options);
+        applySequelizeAdapter(model as ModelStatic<Model>, options);
       }
       
       return model;
     };
 
     // Apply to already defined models
-    Object.values(sequelize.models).forEach((model: any) => {
+    Object.values(sequelize.models).forEach((model: ModelStatic<Model>) => {
       const modelName = model.name;
       const shouldApply = excludeModels.includes(modelName) 
         ? false 
         : models.length === 0 || models.includes(modelName);
       
       if (shouldApply) {
-        applySequelizeAdapter(model, options);
+        applySequelizeAdapter(model as ModelStatic<Model>, options);
       }
     });
   };
@@ -154,20 +154,16 @@ export function createSequelizePlugin(options: SequelizeAdapterOptions = {}) {
 export class TenantModel extends Model {
   static tenantField = 'tenantId';
 
-  static initTenantModel(attributes: any, options: any) {
+  static initTenantModel(attributes: ModelAttributes, options: ModelOptions & { sequelize: Sequelize }) {
     const modelOptions = {
       ...options,
       hooks: {
-        ...options.hooks,
-        afterDefine: (model: ModelStatic<any>) => {
-          applySequelizeAdapter(model, { tenantField: this.tenantField });
-          if (options.hooks?.afterDefine) {
-            options.hooks.afterDefine(model);
-          }
-        }
+        ...options.hooks
       }
     };
 
-    return this.init(attributes, modelOptions);
+    const result = this.init(attributes, modelOptions);
+    applySequelizeAdapter(this as unknown as ModelStatic<Model>, { tenantField: this.tenantField });
+    return result;
   }
 }

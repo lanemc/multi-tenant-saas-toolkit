@@ -1,5 +1,5 @@
 {
-  "name": "@lanemc/multitenancy-fastify",
+  "name": "@thesaasdevkit/multitenancy-fastify",
   "version": "1.0.1",
   "description": "Fastify middleware adapter for multi-tenancy",
   "main": "dist/index.js",
@@ -17,7 +17,7 @@
     "clean": "rimraf dist"
   },
   "dependencies": {
-    "@lanemc/multitenancy-core": "^1.0.1",
+    "@thesaasdevkit/multitenancy-core": "^1.0.1",
     "fastify-plugin": "^4.5.1"
   },
   "devDependencies": {

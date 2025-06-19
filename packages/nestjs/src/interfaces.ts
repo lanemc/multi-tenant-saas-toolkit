@@ -1,4 +1,4 @@
-import { TenantMiddlewareOptions } from '@lanemc/multitenancy-core';
+import { TenantMiddlewareOptions } from '@thesaasdevkit/multitenancy-core';
 import { ModuleMetadata, Type } from '@nestjs/common';
 
 export interface MultitenancyModuleOptions extends TenantMiddlewareOptions {

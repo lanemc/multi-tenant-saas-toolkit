@@ -1,4 +1,4 @@
-import { TenantMiddlewareOptions, TenantContext, tenantContext } from '@lanemc/multitenancy-core';
+import { TenantMiddlewareOptions, TenantContext, tenantContext } from '@thesaasdevkit/multitenancy-core';
 import { FastifyPluginAsync, FastifyRequest, FastifyReply, onRequestHookHandler } from 'fastify';
 import fp from 'fastify-plugin';
 
@@ -206,7 +206,7 @@ export function requirePermission(...permissions: string[]) {
 // Export the plugin wrapped with fastify-plugin for proper encapsulation
 export const fastifyMultitenancy = fp(fastifyMultitenancyPlugin, {
   fastify: '>=3.0.0',
-  name: '@lanemc/multitenancy-fastify'
+  name: '@thesaasdevkit/multitenancy-fastify'
 });
 
 // Export types from core (avoiding function conflicts)
@@ -218,4 +218,4 @@ export type {
   TenantDataStore,
   TenantResolutionOptions,
   TenantMiddlewareOptions
-} from '@lanemc/multitenancy-core';
+} from '@thesaasdevkit/multitenancy-core';

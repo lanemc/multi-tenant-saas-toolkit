@@ -1,4 +1,4 @@
-import { tenantContext } from '@lanemc/multitenancy-core';
+import { tenantContext } from '@thesaasdevkit/multitenancy-core';
 import { Schema, Model, Document, Query, Aggregate, Types } from 'mongoose';
 
 export interface MongooseAdapterOptions {

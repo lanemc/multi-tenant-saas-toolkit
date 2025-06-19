@@ -1,5 +1,5 @@
 {
-  "name": "@saaskit/multitenancy-root",
+  "name": "@thesaasdevkit/multitenancy-root",
   "version": "1.0.0",
   "private": true,
   "description": "Multi-tenant SaaS toolkit for Node.js applications",
