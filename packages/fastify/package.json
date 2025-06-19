@@ -1,6 +1,6 @@
 {
   "name": "@saaskit/multitenancy-fastify",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Fastify middleware adapter for multi-tenancy",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -17,7 +17,7 @@
     "clean": "rimraf dist"
   },
   "dependencies": {
-    "@saaskit/multitenancy-core": "^1.0.0",
+    "@saaskit/multitenancy-core": "^1.0.1",
     "fastify-plugin": "^4.5.1"
   },
   "devDependencies": {

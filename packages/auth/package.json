@@ -1,6 +1,6 @@
 {
   "name": "@saaskit/multitenancy-auth",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "RBAC and ABAC authorization for multi-tenant applications",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -17,7 +17,7 @@
     "clean": "rimraf dist"
   },
   "dependencies": {
-    "@saaskit/multitenancy-core": "^1.0.0"
+    "@saaskit/multitenancy-core": "^1.0.1"
   },
   "devDependencies": {
     "@types/jest": "^29.5.10",
