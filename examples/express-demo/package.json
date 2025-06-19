@@ -11,8 +11,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@saaskit/multitenancy-auth": "^1.0.0",
-    "@saaskit/multitenancy-core": "^1.0.0",
+    "@thesaasdevkit/multitenancy-auth": "^1.0.16",
+    "@thesaasdevkit/multitenancy-core": "^1.0.16",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
     "uuid": "^9.0.1"

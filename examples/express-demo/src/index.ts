@@ -1,4 +1,4 @@
-import { AuthorizationManager } from '@saaskit/multitenancy-auth';
+import { AuthorizationManager } from '@thesaasdevkit/multitenancy-auth';
 import { 
   createTenantMiddleware, 
   tenantContext,
@@ -6,7 +6,7 @@ import {
   TenantDataStore,
   Tenant,
   TenantUser
-} from '@saaskit/multitenancy-core';
+} from '@thesaasdevkit/multitenancy-core';
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
