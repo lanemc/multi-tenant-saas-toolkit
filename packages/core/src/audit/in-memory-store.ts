@@ -1,6 +1,6 @@
-import { AuditEvent, AuditLogStore, AuditQueryOptions } from './audit-logger';
+import { AuditEvent, AuditStore, AuditQueryFilter, AuditQuerySort, AuditQueryPagination } from './types';
 
-export class InMemoryAuditStore implements AuditLogStore {
+export class InMemoryAuditStore implements AuditStore {
   private events: AuditEvent[] = [];
   private maxEvents: number;
 

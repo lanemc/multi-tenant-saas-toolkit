@@ -174,7 +174,7 @@ function wrapHandlersWithContext(
 function wrapHandlerWithContext(handler: any, context: TenantContext): any {
   if (typeof handler !== 'function') return handler;
   
-  return async (request: FastifyRequest, reply: FastifyReply) => {
+  return async (_request: FastifyRequest, reply: FastifyReply) => {
     return tenantContext.runAsync(context, async () => {
       return handler(request, reply);
     });
@@ -207,7 +207,7 @@ function extractSubdomain(request: FastifyRequest): string | null {
 /**
  * Fastify preHandler hook to require authentication within tenant context
  */
-export async function requireTenantAuth(request: FastifyRequest, reply: FastifyReply) {
+export async function requireTenantAuth(_request: FastifyRequest, reply: FastifyReply) {
   const user = tenantContext.getCurrentUser();
   if (!user) {
     return reply.status(401).send({ error: 'Authentication required' });
@@ -218,7 +218,7 @@ export async function requireTenantAuth(request: FastifyRequest, reply: FastifyR
  * Fastify preHandler hook factory to require specific roles
  */
 export function requireRole(...roles: string[]) {
-  return async (request: FastifyRequest, reply: FastifyReply) => {
+  return async (_request: FastifyRequest, reply: FastifyReply) => {
     if (!tenantContext.hasAnyRole(roles)) {
       return reply.status(403).send({ 
         error: 'Insufficient permissions',
@@ -233,7 +233,7 @@ export function requireRole(...roles: string[]) {
  * Fastify preHandler hook factory to require specific permissions
  */
 export function requirePermission(...permissions: string[]) {
-  return async (request: FastifyRequest, reply: FastifyReply) => {
+  return async (_request: FastifyRequest, reply: FastifyReply) => {
     const hasPermission = permissions.some(p => tenantContext.hasPermission(p));
     if (!hasPermission) {
       return reply.status(403).send({ 

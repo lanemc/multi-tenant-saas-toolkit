@@ -158,19 +158,20 @@ function extractSubdomain(req: Request): string | null {
 /**
  * Express middleware to require authentication within tenant context
  */
-export function requireTenantAuth(req: TenantRequest, res: Response, next: NextFunction) {
+export function requireTenantAuth(_req: TenantRequest, res: Response, next: NextFunction) {
   const user = tenantContext.getCurrentUser();
   if (!user) {
     return res.status(401).json({ error: 'Authentication required' });
   }
   next();
+  return;
 }
 
 /**
  * Express middleware factory to require specific roles
  */
 export function requireRole(...roles: string[]) {
-  return (req: TenantRequest, res: Response, next: NextFunction) => {
+  return (_req: TenantRequest, res: Response, next: NextFunction) => {
     if (!tenantContext.hasAnyRole(roles)) {
       return res.status(403).json({ 
         error: 'Insufficient permissions',
@@ -179,6 +180,7 @@ export function requireRole(...roles: string[]) {
       });
     }
     next();
+    return;
   };
 }
 
@@ -186,7 +188,7 @@ export function requireRole(...roles: string[]) {
  * Express middleware factory to require specific permissions
  */
 export function requirePermission(...permissions: string[]) {
-  return (req: TenantRequest, res: Response, next: NextFunction) => {
+  return (_req: TenantRequest, res: Response, next: NextFunction) => {
     const hasPermission = permissions.some(p => tenantContext.hasPermission(p));
     if (!hasPermission) {
       return res.status(403).json({ 
@@ -196,5 +198,6 @@ export function requirePermission(...permissions: string[]) {
       });
     }
     next();
+    return;
   };
 }

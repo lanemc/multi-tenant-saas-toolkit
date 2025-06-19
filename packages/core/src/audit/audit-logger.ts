@@ -60,7 +60,7 @@ export class AuditLogger {
     }
 
     // Apply tenant context filter if available and no explicit tenant filter
-    const context = TenantContext.get();
+    const context = tenantContext.getContext();
     const finalFilter = { ...filter };
     if (context?.tenant?.id && !finalFilter.tenant) {
       finalFilter.tenant = context.tenant.id;
@@ -75,7 +75,7 @@ export class AuditLogger {
     }
 
     // Apply tenant context filter if available and no explicit tenant filter
-    const context = TenantContext.get();
+    const context = tenantContext.getContext();
     const finalFilter = { ...filter };
     if (context?.tenant?.id && !finalFilter.tenant) {
       finalFilter.tenant = context.tenant.id;

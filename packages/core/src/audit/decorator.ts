@@ -2,7 +2,7 @@ import { AuditLogger } from './audit-logger';
 import { AuditActionConfig } from './types';
 
 export function AuditAction(config: AuditActionConfig) {
-  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+  return function (_target: any, _propertyKey: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
     
     descriptor.value = async function (...args: any[]) {

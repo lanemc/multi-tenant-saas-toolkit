@@ -125,7 +125,7 @@ const tenantDataStore: TenantDataStore = {
 const JWT_SECRET = 'your-secret-key';
 
 // Authentication middleware
-app.use((req, res, next) => {
+app.use((req, _res, next) => {
   const token = req.headers.authorization?.replace('Bearer ', '');
   
   if (token) {
