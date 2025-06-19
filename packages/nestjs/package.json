@@ -1,6 +1,6 @@
 {
   "name": "@thesaasdevkit/multitenancy-nestjs",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "NestJS module and middleware for multi-tenancy",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -17,7 +17,7 @@
     "clean": "rimraf dist"
   },
   "dependencies": {
-    "@thesaasdevkit/multitenancy-core": "^1.0.17"
+    "@thesaasdevkit/multitenancy-core": "^1.0.18"
   },
   "devDependencies": {
     "@nestjs/common": "^10.2.10",

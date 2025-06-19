@@ -1,6 +1,6 @@
 {
   "name": "@thesaasdevkit/multitenancy-adapters",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "ORM adapters for multi-tenancy (Prisma, Sequelize, Mongoose)",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -17,7 +17,7 @@
     "clean": "rimraf dist"
   },
   "dependencies": {
-    "@thesaasdevkit/multitenancy-core": "^1.0.17"
+    "@thesaasdevkit/multitenancy-core": "^1.0.18"
   },
   "devDependencies": {
     "@prisma/client": "^5.6.0",
