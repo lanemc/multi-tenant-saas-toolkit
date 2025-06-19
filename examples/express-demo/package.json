@@ -11,8 +11,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@saaskit/multitenancy-auth": "workspace:*",
-    "@saaskit/multitenancy-core": "workspace:*",
+    "@saaskit/multitenancy-auth": "^1.0.0",
+    "@saaskit/multitenancy-core": "^1.0.0",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
     "uuid": "^9.0.1"

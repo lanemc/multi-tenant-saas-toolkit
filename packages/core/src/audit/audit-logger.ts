@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { AuditEvent, AuditLogInput, AuditLoggerConfig, AuditStore, AuditQueryFilter } from './types';
-import { TenantContext } from '../context/tenant-context';
+import { tenantContext } from '../context/tenant-context';
 
 export class AuditLogger {
   private static instance: AuditLogger;
@@ -25,11 +25,11 @@ export class AuditLogger {
 
   async log(input: AuditLogInput): Promise<void> {
     try {
-      const context = TenantContext.get();
+      const context = tenantContext.getContext();
       const event: AuditEvent = {
         id: uuidv4(),
         timestamp: new Date(),
-        tenant: context?.tenantId,
+        tenant: context?.tenant?.id,
         actor: this.getActor(context),
         action: input.action,
         resource: input.resource,
@@ -60,8 +60,8 @@ export class AuditLogger {
     // Apply tenant context filter if available and no explicit tenant filter
     const context = TenantContext.get();
     const finalFilter = { ...filter };
-    if (context?.tenantId && !finalFilter.tenant) {
-      finalFilter.tenant = context.tenantId;
+    if (context?.tenant?.id && !finalFilter.tenant) {
+      finalFilter.tenant = context.tenant.id;
     }
 
     return this.store.query(finalFilter);
@@ -75,16 +75,16 @@ export class AuditLogger {
     // Apply tenant context filter if available and no explicit tenant filter
     const context = TenantContext.get();
     const finalFilter = { ...filter };
-    if (context?.tenantId && !finalFilter.tenant) {
-      finalFilter.tenant = context.tenantId;
+    if (context?.tenant?.id && !finalFilter.tenant) {
+      finalFilter.tenant = context.tenant.id;
     }
 
     return this.store.count(finalFilter);
   }
 
   private getActor(context: any): { id: string; type: 'user' | 'system' | 'anonymous' } {
-    if (context?.userId) {
-      return { id: context.userId, type: 'user' };
+    if (context?.user?.id) {
+      return { id: context.user.id, type: 'user' };
     }
     
     // Check if this is a system operation (could be determined by other context)

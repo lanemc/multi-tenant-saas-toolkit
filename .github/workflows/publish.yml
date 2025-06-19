@@ -1,0 +1,152 @@
+name: Publish to NPM
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run lint (required for publish)
+        run: npm run lint
+        
+      - name: Run type check (required for publish)
+        run: npm run typecheck
+
+      - name: Run tests (required for publish)
+        run: npm run test
+        env:
+          CI: true
+          
+      - name: Verify test results
+        run: |
+          echo "✅ All tests passed successfully"
+          echo "✅ Type checking completed without errors"  
+          echo "✅ Linting completed without errors"
+          echo "🚀 Ready to build and publish packages"
+
+      - name: Build packages
+        run: npm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            packages/*/dist/
+            packages/*/package.json
+          retention-days: 1
+
+  publish:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main' && github.event_name == 'workflow_dispatch')
+    strategy:
+      matrix:
+        package:
+          - core
+          - auth
+          - adapters
+          - nestjs
+          - fastify
+    steps:
+      - name: Verify prerequisite jobs passed
+        run: |
+          echo "✅ Build and test job completed successfully"
+          echo "✅ All tests passed - proceeding with publish"
+          
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+
+      - name: Build package
+        run: npm run build --workspace=packages/${{ matrix.package }}
+
+      - name: Check if package should be published
+        id: should-publish
+        run: |
+          cd packages/${{ matrix.package }}
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          
+          echo "Package: $PACKAGE_NAME@$PACKAGE_VERSION"
+          
+          # Check if this version already exists on npm
+          if npm view "$PACKAGE_NAME@$PACKAGE_VERSION" version 2>/dev/null; then
+            echo "Version $PACKAGE_VERSION already published for $PACKAGE_NAME"
+            echo "should_publish=false" >> $GITHUB_OUTPUT
+          else
+            echo "Version $PACKAGE_VERSION not found for $PACKAGE_NAME - will publish"
+            echo "should_publish=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Publish to NPM
+        if: steps.should-publish.outputs.should_publish == 'true'
+        run: |
+          cd packages/${{ matrix.package }}
+          npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_SAAS_DEV_KIT }}
+
+      - name: Create GitHub Release (for tags)
+        if: startsWith(github.ref, 'refs/tags/v') && steps.should-publish.outputs.should_publish == 'true'
+        uses: softprops/action-gh-release@v1
+        with:
+          generate_release_notes: true
+          files: |
+            packages/${{ matrix.package }}/dist/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  notify:
+    needs: [build-and-test, publish]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Report Status
+        run: |
+          if [ "${{ needs.build-and-test.result }}" = "success" ] && [ "${{ needs.publish.result }}" = "success" ]; then
+            echo "✅ All tests passed, build successful, and packages published!"
+          elif [ "${{ needs.build-and-test.result }}" = "failure" ]; then
+            echo "❌ Build, tests, or lint failed - publish blocked"
+            echo "🚫 Publishing requires all tests to pass"
+            exit 1
+          elif [ "${{ needs.publish.result }}" = "failure" ]; then
+            echo "❌ Tests passed but publish failed"
+            exit 1
+          else
+            echo "ℹ️  Workflow completed with status: build-and-test=${{ needs.build-and-test.result }}, publish=${{ needs.publish.result }}"
+          fi
