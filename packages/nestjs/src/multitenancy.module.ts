@@ -1,9 +1,10 @@
 import { DynamicModule, Global, Module, Provider } from '@nestjs/common';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+
+import { MULTITENANCY_OPTIONS } from './constants';
+import { TenantContextInterceptor } from './interceptors/tenant-context.interceptor';
 import { MultitenancyModuleOptions, MultitenancyModuleAsyncOptions, MultitenancyOptionsFactory } from './interfaces';
 import { TenantMiddleware } from './middleware/tenant.middleware';
-import { TenantContextInterceptor } from './interceptors/tenant-context.interceptor';
-import { MULTITENANCY_OPTIONS } from './constants';
 
 @Global()
 @Module({})

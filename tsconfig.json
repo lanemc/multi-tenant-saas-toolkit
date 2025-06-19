@@ -1,9 +1,22 @@
 {
+  "extends": "./tsconfig.base.json",
+  "include": [
+    "packages/*/src/**/*",
+    "examples/*/src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/__tests__/**/*"
+  ],
   "files": [],
   "references": [
     { "path": "./packages/core" },
     { "path": "./packages/adapters" },
     { "path": "./packages/auth" },
+    { "path": "./packages/nestjs" },
+    { "path": "./packages/fastify" },
     { "path": "./examples/express-demo" }
   ]
 }

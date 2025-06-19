@@ -12,9 +12,7 @@ export interface MongooseAdapterOptions {
  */
 export function mongooseTenantPlugin(schema: Schema, options: MongooseAdapterOptions = {}) {
   const { 
-    tenantField = 'tenantId',
-    discriminatorField = 'tenant',
-    useDiscriminator = false 
+    tenantField = 'tenantId'
   } = options;
 
   // Add tenant field to schema if not exists

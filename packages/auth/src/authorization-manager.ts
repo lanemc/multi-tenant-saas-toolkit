@@ -1,6 +1,7 @@
 import { tenantContext, TenantContext } from '@saaskit/multitenancy-core';
-import { RoleManager } from './rbac/role-manager';
+
 import { PolicyEngine, Policy, PolicyContext } from './abac/policy-engine';
+import { RoleManager } from './rbac/role-manager';
 
 export interface AuthorizationOptions {
   roleManager?: RoleManager;

@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { TenantMiddlewareOptions, TenantContext } from '../types';
+
 import { tenantContext } from '../context/tenant-context';
+import { TenantMiddlewareOptions, TenantContext } from '../types';
 
 export interface TenantRequest extends Request {
   tenant?: TenantContext['tenant'];
@@ -81,7 +82,7 @@ export function createTenantMiddleware(options: TenantMiddlewareOptions) {
         }
 
         // Get user and roles if authenticated
-        let user = (req as any).user;
+        const user = (req as any).user;
         let roles: string[] = [];
         let permissions: string[] = [];
 

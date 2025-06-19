@@ -1,7 +1,8 @@
+import { Request } from 'express';
+
+import { TenantContext } from '../../context/tenant-context';
 import { AuditLogger } from '../audit-logger';
 import { AuditStore, AuditEvent, AuditQueryFilter } from '../types';
-import { TenantContext } from '../../context/tenant-context';
-import { Request } from 'express';
 
 // Mock AuditStore implementation
 class MockAuditStore implements AuditStore {

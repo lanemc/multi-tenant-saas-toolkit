@@ -1,4 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
+
+import { TenantContext } from '../../context/tenant-context';
 import { 
   createTenantMiddleware, 
   requireTenantAuth, 
@@ -6,7 +8,6 @@ import {
   requirePermission,
   TenantRequest 
 } from '../express';
-import { TenantContext } from '../../context/tenant-context';
 
 // Mock implementations
 const mockRequest = (overrides: Partial<Request> = {}): Partial<TenantRequest> => ({

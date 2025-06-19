@@ -1,6 +1,6 @@
+import { TenantMiddlewareOptions, TenantContext, tenantContext } from '@saaskit/multitenancy-core';
 import { FastifyPluginAsync, FastifyRequest, FastifyReply, onRequestHookHandler } from 'fastify';
 import fp from 'fastify-plugin';
-import { TenantMiddlewareOptions, TenantContext, tenantContext } from '@saaskit/multitenancy-core';
 
 declare module 'fastify' {
   interface FastifyRequest {
@@ -87,7 +87,7 @@ const fastifyMultitenancyPlugin: FastifyPluginAsync<TenantMiddlewareOptions> = a
         }
 
         // Get user and roles if authenticated
-        let user = (request as any).user;
+        const user = (request as any).user;
         let roles: string[] = [];
         let permissions: string[] = [];
 
@@ -251,5 +251,13 @@ export const fastifyMultitenancy = fp(fastifyMultitenancyPlugin, {
   name: '@saaskit/multitenancy-fastify'
 });
 
-// Export types and utilities from core
-export * from '@saaskit/multitenancy-core';
+// Export types from core (avoiding function conflicts)
+export type { 
+  Tenant, 
+  User, 
+  TenantUser, 
+  TenantContext,
+  TenantDataStore,
+  TenantResolutionOptions,
+  TenantMiddlewareOptions
+} from '@saaskit/multitenancy-core';

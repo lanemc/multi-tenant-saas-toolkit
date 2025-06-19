@@ -1,6 +1,7 @@
 import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { tenantContext } from '@saaskit/multitenancy-core';
+
 import { PERMISSIONS_KEY } from '../constants';
 
 @Injectable()

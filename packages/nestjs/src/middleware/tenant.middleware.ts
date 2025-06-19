@@ -1,8 +1,9 @@
 import { Injectable, NestMiddleware, Inject } from '@nestjs/common';
-import { Request, Response, NextFunction } from 'express';
 import { TenantContext, tenantContext } from '@saaskit/multitenancy-core';
-import { MultitenancyModuleOptions } from '../interfaces';
+import { Request, Response, NextFunction } from 'express';
+
 import { MULTITENANCY_OPTIONS } from '../constants';
+import { MultitenancyModuleOptions } from '../interfaces';
 
 export interface TenantRequest extends Request {
   tenant?: TenantContext['tenant'];
@@ -85,7 +86,7 @@ export class TenantMiddleware implements NestMiddleware {
         }
 
         // Get user and roles if authenticated
-        let user = (req as any).user;
+        const user = (req as any).user;
         let roles: string[] = [];
         let permissions: string[] = [];
 

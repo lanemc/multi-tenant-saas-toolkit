@@ -1,5 +1,5 @@
-import { AuditActionConfig } from './types';
 import { AuditLogger } from './audit-logger';
+import { AuditActionConfig } from './types';
 
 export function AuditAction(config: AuditActionConfig) {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {

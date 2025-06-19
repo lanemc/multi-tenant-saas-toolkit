@@ -1,6 +1,7 @@
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
-import { Observable } from 'rxjs';
 import { tenantContext } from '@saaskit/multitenancy-core';
+import { Observable } from 'rxjs';
+
 import { TenantRequest } from '../middleware/tenant.middleware';
 
 @Injectable()

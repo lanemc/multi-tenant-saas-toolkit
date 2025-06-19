@@ -1,5 +1,4 @@
 import { TenantContext } from '../tenant-context';
-import { AsyncLocalStorage } from 'async_hooks';
 
 describe('TenantContext', () => {
   beforeEach(() => {

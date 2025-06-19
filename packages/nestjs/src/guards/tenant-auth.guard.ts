@@ -3,7 +3,7 @@ import { tenantContext } from '@saaskit/multitenancy-core';
 
 @Injectable()
 export class TenantAuthGuard implements CanActivate {
-  canActivate(context: ExecutionContext): boolean {
+  canActivate(_context: ExecutionContext): boolean {
     const user = tenantContext.getCurrentUser();
     
     if (!user) {

@@ -1,6 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
-import { AuditEvent, AuditLogInput, AuditLoggerConfig, AuditStore, AuditQueryFilter } from './types';
+
 import { tenantContext } from '../context/tenant-context';
+
+import { AuditEvent, AuditLogInput, AuditLoggerConfig, AuditStore, AuditQueryFilter } from './types';
 
 export class AuditLogger {
   private static instance: AuditLogger;

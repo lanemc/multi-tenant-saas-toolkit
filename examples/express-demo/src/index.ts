@@ -1,14 +1,13 @@
-import express from 'express';
+import { AuthorizationManager } from '@saaskit/multitenancy-auth';
 import { 
   createTenantMiddleware, 
   tenantContext,
   requireRole,
-  requirePermission,
   TenantDataStore,
   Tenant,
   TenantUser
 } from '@saaskit/multitenancy-core';
-import { AuthorizationManager, PolicyEngine } from '@saaskit/multitenancy-auth';
+import express from 'express';
 import jwt from 'jsonwebtoken';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -186,7 +185,7 @@ app.get('/', (req, res) => {
 
 // Login endpoint (generates JWT)
 app.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  const { email } = req.body;
   
   // Find user (mock authentication)
   const user = Array.from(users.values()).find(u => u.email === email);
@@ -281,7 +280,7 @@ app.post('/api/tenants', async (req, res) => {
 });
 
 // Error handling
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+app.use((err: any, req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error(err.stack);
   res.status(500).json({ 
     error: 'Internal server error',
