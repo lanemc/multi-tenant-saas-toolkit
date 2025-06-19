@@ -73,7 +73,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: 'https://registry.npmjs.org/'
           cache: 'npm'
 
       - name: Install dependencies
@@ -105,10 +105,21 @@ jobs:
             echo "should_publish=true" >> $GITHUB_OUTPUT
           fi
 
+      - name: Configure npm authentication
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN_SAAS_DEV_KIT }}" > ~/.npmrc
+          echo "registry=https://registry.npmjs.org/" >> ~/.npmrc
+          echo "always-auth=true" >> ~/.npmrc
+
       - name: Publish core package to NPM
         if: steps.should-publish.outputs.should_publish == 'true'
         run: |
           cd packages/core
+          echo "Verifying npm configuration..."
+          npm config list | grep -E "registry|auth" || true
+          echo "Current npm user:"
+          npm whoami || echo "Not authenticated"
+          echo "Publishing package..."
           npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_SAAS_DEV_KIT }}
@@ -147,7 +158,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: 'https://registry.npmjs.org/'
           cache: 'npm'
 
       - name: Install dependencies
@@ -179,10 +190,21 @@ jobs:
             echo "should_publish=true" >> $GITHUB_OUTPUT
           fi
 
+      - name: Configure npm authentication
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN_SAAS_DEV_KIT }}" > ~/.npmrc
+          echo "registry=https://registry.npmjs.org/" >> ~/.npmrc
+          echo "always-auth=true" >> ~/.npmrc
+
       - name: Publish to NPM
         if: steps.should-publish.outputs.should_publish == 'true'
         run: |
           cd packages/${{ matrix.package }}
+          echo "Verifying npm configuration..."
+          npm config list | grep -E "registry|auth" || true
+          echo "Current npm user:"
+          npm whoami || echo "Not authenticated"
+          echo "Publishing package..."
           npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_SAAS_DEV_KIT }}
