@@ -1,4 +1,4 @@
-import { tenantContext } from '@saaskit/multitenancy-core';
+import { tenantContext } from '@lanemc/multitenancy-core';
 
 export interface PrismaAdapterOptions {
   tenantField?: string;

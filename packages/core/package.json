@@ -1,5 +1,5 @@
 {
-  "name": "@saaskit/multitenancy-core",
+  "name": "@lanemc/multitenancy-core",
   "version": "1.0.1",
   "description": "Core multi-tenancy components including context management and middleware",
   "main": "dist/index.js",

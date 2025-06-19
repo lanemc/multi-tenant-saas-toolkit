@@ -1,11 +1,11 @@
-# @saaskit/multitenancy-nestjs
+# @lanemc/multitenancy-nestjs
 
 NestJS module and middleware for the Multi-Tenant SaaS Toolkit.
 
 ## Installation
 
 ```bash
-npm install @saaskit/multitenancy-nestjs @saaskit/multitenancy-core
+npm install @lanemc/multitenancy-nestjs @lanemc/multitenancy-core
 ```
 
 ## Usage
@@ -14,7 +14,7 @@ npm install @saaskit/multitenancy-nestjs @saaskit/multitenancy-core
 
 ```typescript
 import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
-import { MultitenancyModule, TenantMiddleware } from '@saaskit/multitenancy-nestjs';
+import { MultitenancyModule, TenantMiddleware } from '@lanemc/multitenancy-nestjs';
 
 @Module({
   imports: [
@@ -48,7 +48,7 @@ export class AppModule implements NestModule {
 
 ```typescript
 import { Module } from '@nestjs/common';
-import { MultitenancyModule } from '@saaskit/multitenancy-nestjs';
+import { MultitenancyModule } from '@lanemc/multitenancy-nestjs';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
@@ -85,7 +85,7 @@ import {
   Tenant,
   TenantUser,
   TenantId
-} from '@saaskit/multitenancy-nestjs';
+} from '@lanemc/multitenancy-nestjs';
 
 @Controller('api')
 @UseGuards(TenantAuthGuard) // Require authenticated user in tenant context
@@ -173,7 +173,7 @@ resolution: {
 
 ```typescript
 import { Injectable } from '@nestjs/common';
-import { tenantContext } from '@saaskit/multitenancy-core';
+import { tenantContext } from '@lanemc/multitenancy-core';
 
 @Injectable()
 export class DataService {

@@ -1,11 +1,11 @@
-# @saaskit/multitenancy-auth
+# @lanemc/multitenancy-auth
 
 RBAC and ABAC authorization for multi-tenant applications.
 
 ## Installation
 
 ```bash
-npm install @saaskit/multitenancy-auth
+npm install @lanemc/multitenancy-auth
 ```
 
 ## Features

@@ -5,7 +5,7 @@ The Multi-Tenant SaaS Toolkit provides built-in audit logging capabilities for c
 ## Quick Start
 
 ```typescript
-import { auditLogger, InMemoryAuditStore } from '@saaskit/multitenancy-core';
+import { auditLogger, InMemoryAuditStore } from '@lanemc/multitenancy-core';
 
 // Configure the audit logger with a store
 auditLogger.configure({
@@ -50,7 +50,7 @@ await auditLogger.log('document.create', {
 For class methods, use the `@AuditAction` decorator:
 
 ```typescript
-import { AuditAction } from '@saaskit/multitenancy-core';
+import { AuditAction } from '@lanemc/multitenancy-core';
 
 class DocumentService {
   @AuditAction('document.create')
@@ -131,7 +131,7 @@ app.post('/api/documents', requireTenantAuth, async (req, res) => {
 Implement your own audit store for production use:
 
 ```typescript
-import { AuditLogStore, AuditEvent } from '@saaskit/multitenancy-core';
+import { AuditLogStore, AuditEvent } from '@lanemc/multitenancy-core';
 
 class DatabaseAuditStore implements AuditLogStore {
   async log(event: AuditEvent): Promise<void> {

@@ -1,11 +1,11 @@
-# @saaskit/multitenancy-adapters
+# @lanemc/multitenancy-adapters
 
 Database adapters for multi-tenant applications.
 
 ## Installation
 
 ```bash
-npm install @saaskit/multitenancy-adapters
+npm install @lanemc/multitenancy-adapters
 ```
 
 ## Features

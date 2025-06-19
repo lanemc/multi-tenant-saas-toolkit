@@ -1,5 +1,5 @@
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
-import { tenantContext } from '@saaskit/multitenancy-core';
+import { tenantContext } from '@lanemc/multitenancy-core';
 
 @Injectable()
 export class TenantAuthGuard implements CanActivate {

@@ -23,11 +23,11 @@ export {
   AuditLogInput,
   AuditLoggerConfig,
   AuditActionConfig
-} from '@saaskit/multitenancy-core';
+} from '@lanemc/multitenancy-core';
 
 // Re-export core types with aliases to avoid conflicts
 export {
   Tenant as TenantType,
   User as UserType,
   TenantUser as TenantUserType
-} from '@saaskit/multitenancy-core';
+} from '@lanemc/multitenancy-core';

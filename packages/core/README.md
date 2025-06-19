@@ -1,11 +1,11 @@
-# @saaskit/multitenancy-core
+# @lanemc/multitenancy-core
 
 Core multi-tenancy components for Node.js applications.
 
 ## Installation
 
 ```bash
-npm install @saaskit/multitenancy-core
+npm install @lanemc/multitenancy-core
 ```
 
 ## Features

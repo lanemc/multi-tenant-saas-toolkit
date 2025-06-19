@@ -1,18 +1,18 @@
-# @saaskit/multitenancy-fastify
+# @lanemc/multitenancy-fastify
 
 Fastify middleware adapter for the Multi-Tenant SaaS Toolkit.
 
 ## Installation
 
 ```bash
-npm install @saaskit/multitenancy-fastify @saaskit/multitenancy-core
+npm install @lanemc/multitenancy-fastify @lanemc/multitenancy-core
 ```
 
 ## Usage
 
 ```typescript
 import fastify from 'fastify';
-import { fastifyMultitenancy, requireRole, requirePermission } from '@saaskit/multitenancy-fastify';
+import { fastifyMultitenancy, requireRole, requirePermission } from '@lanemc/multitenancy-fastify';
 
 const app = fastify();
 
@@ -102,7 +102,7 @@ resolution: {
 Within route handlers and hooks running after the multitenancy plugin, you can access the tenant context:
 
 ```typescript
-import { tenantContext } from '@saaskit/multitenancy-core';
+import { tenantContext } from '@lanemc/multitenancy-core';
 
 app.get('/api/data', async (request, reply) => {
   // Direct access from request

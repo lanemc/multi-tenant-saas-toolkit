@@ -3,7 +3,7 @@ const commonjs = require('@rollup/plugin-commonjs');
 const typescript = require('@rollup/plugin-typescript');
 const dts = require('rollup-plugin-dts').default;
 
-const external = ['@saaskit/multitenancy-core'];
+const external = ['@lanemc/multitenancy-core'];
 
 module.exports = [
   // ES Modules and CommonJS build

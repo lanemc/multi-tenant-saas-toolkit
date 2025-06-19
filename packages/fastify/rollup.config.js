@@ -4,7 +4,7 @@ const typescript = require('@rollup/plugin-typescript');
 const dts = require('rollup-plugin-dts').default;
 
 const external = [
-  '@saaskit/multitenancy-core',
+  '@lanemc/multitenancy-core',
   'fastify-plugin',
   'fastify'
 ];
