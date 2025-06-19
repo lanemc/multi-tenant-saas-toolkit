@@ -1,4 +1,4 @@
-import { AuditEvent, AuditStore, AuditQueryFilter, AuditQuerySort, AuditQueryPagination } from './types';
+import { AuditEvent, AuditStore, AuditQueryFilter } from './types';
 
 export class InMemoryAuditStore implements AuditStore {
   private events: AuditEvent[] = [];
